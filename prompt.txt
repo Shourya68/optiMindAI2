@@ -1,0 +1,6 @@
+
+1. Create an interactive DAA Workbench using HTML, CSS and JavaScript.
+2. Implement QuickSort using Lomuto Partitioning and animated visualization.
+3. Implement Greedy Activity Selection using earliest finishing time.
+4. Create a modern responsive dashboard with navigation tabs.
+5. Add comparison counters, execution logs and custom task inputs.

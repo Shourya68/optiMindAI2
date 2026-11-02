@@ -1,0 +1,591 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OptiMind AI | DAA Workbench</title>
+
+<style>
+:root {
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --blue:#2563eb;
+  --dark:#172554;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --green:#16a34a;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  background:var(--bg);
+  color:#1e293b;
+}
+header {
+  background:white;
+  border-bottom:1px solid var(--border);
+  padding:20px 7%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.brand {font-size:24px;font-weight:800;color:var(--dark)}
+.brand span {color:var(--blue)}
+.tag {
+  background:#eff6ff;
+  color:var(--blue);
+  padding:7px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:700;
+}
+main {max-width:1100px;margin:35px auto;padding:0 20px}
+.intro {margin-bottom:25px}
+.intro h1 {font-size:30px;margin:0 0 8px;color:var(--dark)}
+.intro p {color:var(--muted);margin:0;line-height:1.6}
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin:22px 0;
+}
+.stat,.panel {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:20px;
+}
+.stat small {color:var(--muted)}
+.stat strong {display:block;font-size:23px;margin-top:8px;color:var(--dark)}
+.tabs {
+  display:flex;
+  gap:10px;
+  margin:25px 0 18px;
+  flex-wrap:wrap;
+}
+.tab {
+  border:1px solid var(--border);
+  background:white;
+  color:#475569;
+  border-radius:8px;
+  padding:12px 19px;
+  font-weight:650;
+  cursor:pointer;
+}
+.tab.active {background:var(--blue);color:white;border-color:var(--blue)}
+.panel {margin-bottom:20px}
+.panel h2 {margin:0 0 8px;color:var(--dark);font-size:21px}
+.description {color:var(--muted);font-size:14px;line-height:1.6}
+.controls {display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+button {
+  border:0;
+  border-radius:8px;
+  padding:11px 17px;
+  background:var(--blue);
+  color:white;
+  font-weight:650;
+  cursor:pointer;
+}
+button:hover {filter:brightness(.94)}
+button:disabled {opacity:.5;cursor:not-allowed}
+button.secondary {background:#eaf0f8;color:#334155}
+input {
+  padding:11px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  min-width:0;
+  width:100%;
+  outline-color:var(--blue);
+}
+label {font-size:13px;font-weight:650;color:#475569}
+.input-group {display:flex;flex-direction:column;gap:7px;flex:1;min-width:120px}
+#bars {
+  height:240px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:7px;
+  padding:15px 5px 0;
+  border-bottom:1px solid var(--border);
+}
+.bar {
+  flex:1;
+  max-width:55px;
+  min-width:8px;
+  background:#93c5fd;
+  border-radius:5px 5px 0 0;
+  position:relative;
+  transition:height .25s,background .2s;
+}
+.bar span {
+  position:absolute;
+  bottom:100%;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:11px;
+  color:#475569;
+  padding-bottom:4px;
+}
+.bar.active {background:#f59e0b}
+.bar.pivot {background:#ef4444}
+.bar.sorted {background:#22c55e}
+.info-row {
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:17px;
+}
+.info {
+  background:#f8fafc;
+  padding:12px 16px;
+  border-radius:8px;
+  font-size:13px;
+  flex:1;
+}
+.info strong {color:var(--blue);font-size:18px}
+.log {
+  background:#111827;
+  color:#bbf7d0;
+  padding:14px;
+  border-radius:8px;
+  height:115px;
+  overflow:auto;
+  font-family:Consolas,monospace;
+  font-size:12px;
+  line-height:1.8;
+  margin-top:15px;
+}
+.hidden {display:none}
+.task-form {
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr auto;
+  gap:10px;
+  align-items:end;
+  margin:20px 0;
+}
+.task-list {display:grid;gap:10px;margin-top:15px}
+.task {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  padding:13px;
+  background:#f8fafc;
+  border:1px solid var(--border);
+  border-radius:9px;
+}
+.task.selected {border-color:#86efac;background:#f0fdf4}
+.task small {color:var(--muted)}
+.status {font-size:12px;font-weight:700;color:var(--green)}
+.remove {
+  background:#fee2e2;
+  color:#b91c1c;
+  padding:7px 10px;
+}
+.result {
+  background:#eff6ff;
+  border:1px solid #bfdbfe;
+  padding:16px;
+  border-radius:9px;
+  margin-top:17px;
+  line-height:1.7;
+}
+footer {
+  text-align:center;
+  padding:25px;
+  color:var(--muted);
+  font-size:13px;
+}
+@media(max-width:650px) {
+  main {margin:22px auto}
+  .stats {grid-template-columns:1fr}
+  .task-form {grid-template-columns:1fr 1fr}
+  .task-form button {grid-column:span 2}
+  .intro h1 {font-size:25px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">OptiMind <span>AI.</span></div>
+  <div class="tag">DESIGN AND ANALYSIS OF ALGORITHMS</div>
+</header>
+
+<main>
+
+  <section class="intro">
+    <h1>Algorithm Workbench</h1>
+    <p>An interactive learning platform that demonstrates how algorithms
+    solve real-world problems through Divide and Conquer and Greedy strategies.</p>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <small>ALGORITHMS</small>
+      <strong>02</strong>
+    </div>
+    <div class="stat">
+      <small>TECHNOLOGY</small>
+      <strong>HTML · CSS · JS</strong>
+    </div>
+    <div class="stat">
+      <small>PROJECT STATUS</small>
+      <strong style="color:#16a34a">Active</strong>
+    </div>
+  </section>
+
+  <div class="tabs">
+    <button class="tab active" id="sortTab" onclick="showTab('sort')">
+      01 · QuickSort
+    </button>
+    <button class="tab" id="greedyTab" onclick="showTab('greedy')">
+      02 · Smart Scheduler
+    </button>
+  </div>
+
+  <!-- QUICKSORT SECTION -->
+
+  <section class="panel" id="sort">
+    <h2>QuickSort Visualizer</h2>
+    <p class="description">
+      Divide and Conquer: Select a pivot, partition the array into smaller
+      sections, and recursively sort them.
+    </p>
+
+    <div class="controls">
+      <button onclick="runQuickSort()" id="runSort">▶ Run QuickSort</button>
+      <button class="secondary" onclick="randomArray()" id="randomBtn">
+        Generate Array
+      </button>
+      <button class="secondary" onclick="resetArray()" id="resetBtn">
+        Reset
+      </button>
+    </div>
+
+    <div id="bars"></div>
+
+    <div class="info-row">
+      <div class="info">Comparisons<br><strong id="comparisons">0</strong></div>
+      <div class="info">Array Size<br><strong id="arraySize">12</strong></div>
+      <div class="info">Algorithm<br><strong>QuickSort</strong></div>
+    </div>
+
+    <h3 style="font-size:15px;margin-top:22px">Execution Log</h3>
+    <div class="log" id="sortLog">System ready. Generate an array or run QuickSort.</div>
+
+    <div class="result">
+      <strong>Time Complexity</strong><br>
+      Best/Average: O(n log n) &nbsp; | &nbsp; Worst: O(n²)<br>
+      <strong>Space Complexity:</strong> O(log n) average recursion stack.
+    </div>
+  </section>
+
+  <!-- GREEDY SECTION -->
+
+  <section class="panel hidden" id="greedy">
+    <h2>Smart Task Scheduler</h2>
+    <p class="description">
+      Greedy Activity Selection: Select the maximum number of non-overlapping
+      tasks by choosing the activity that finishes earliest.
+    </p>
+
+    <div class="task-form">
+      <div class="input-group">
+        <label>Task Name</label>
+        <input id="taskName" placeholder="e.g. Mathematics">
+      </div>
+      <div class="input-group">
+        <label>Start Time</label>
+        <input id="taskStart" type="number" min="0" max="23" placeholder="9">
+      </div>
+      <div class="input-group">
+        <label>End Time</label>
+        <input id="taskEnd" type="number" min="1" max="24" placeholder="11">
+      </div>
+      <button onclick="addTask()">+ Add Task</button>
+    </div>
+
+    <div class="controls">
+      <button onclick="runGreedy()">⚡ Run Greedy Optimizer</button>
+      <button class="secondary" onclick="loadSample()">Load Sample Tasks</button>
+      <button class="secondary" onclick="clearTasks()">Clear All</button>
+    </div>
+
+    <h3 style="font-size:15px">Your Activities</h3>
+    <div id="taskList" class="task-list"></div>
+
+    <div class="result" id="greedyResult">
+      Add activities and run the optimizer to see your ideal schedule.
+    </div>
+
+    <div class="result">
+      <strong>Greedy Strategy</strong><br>
+      1. Sort activities by finishing time.<br>
+      2. Select the first activity.<br>
+      3. Select the next activity only if its start time is greater than
+      or equal to the previous selected activity's end time.<br>
+      <strong>Time Complexity:</strong> O(n log n), including sorting.<br>
+      <strong>Space Complexity:</strong> O(n) for the selected result.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  OptiMind AI · DAA Workbench · Built with HTML, CSS and JavaScript
+  <br><br>
+  An educational project demonstrating algorithmic problem solving.
+</footer>
+
+<script>
+
+// ---------------- TAB NAVIGATION ----------------
+
+function showTab(tab) {
+  document.getElementById("sort").classList.toggle("hidden", tab !== "sort");
+  document.getElementById("greedy").classList.toggle("hidden", tab !== "greedy");
+  document.getElementById("sortTab").classList.toggle("active", tab === "sort");
+  document.getElementById("greedyTab").classList.toggle("active", tab === "greedy");
+}
+
+// ---------------- QUICKSORT ----------------
+
+let originalArray = [45, 20, 75, 10, 60, 35, 90, 15, 55, 30, 80, 25];
+let arr = [...originalArray];
+let comparisons = 0;
+let running = false;
+
+function renderBars(active = [], pivot = -1, sorted = []) {
+  const max = Math.max(...arr, 1);
+  document.getElementById("bars").innerHTML = arr.map((v, i) => {
+    let cls = "bar";
+    if (sorted.includes(i)) cls += " sorted";
+    else if (i === pivot) cls += " pivot";
+    else if (active.includes(i)) cls += " active";
+
+    return `<div class="${cls}" style="height:${Math.max(5,v/max*190)}px">
+      <span>${v}</span>
+    </div>`;
+  }).join("");
+
+  document.getElementById("comparisons").textContent = comparisons;
+  document.getElementById("arraySize").textContent = arr.length;
+}
+
+function log(message) {
+  const box = document.getElementById("sortLog");
+  box.innerHTML += "<br>› " + message;
+  box.scrollTop = box.scrollHeight;
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function setSortButtons(disabled) {
+  ["runSort", "randomBtn", "resetBtn"].forEach(id => {
+    document.getElementById(id).disabled = disabled;
+  });
+}
+
+async function partition(low, high) {
+  let pivot = arr[high];
+  let i = low - 1;
+
+  log("Pivot selected: " + pivot);
+
+  for (let j = low; j < high; j++) {
+    comparisons++;
+    renderBars([j, i + 1], high);
+    await sleep(350);
+
+    if (arr[j] <= pivot) {
+      i++;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+      renderBars([i, j], high);
+      log(arr[j] + " compared with pivot " + pivot);
+      await sleep(350);
+    }
+  }
+
+  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+  renderBars([], i + 1);
+  await sleep(350);
+
+  return i + 1;
+}
+
+async function quickSort(low, high) {
+  if (low < high) {
+    let pi = await partition(low, high);
+    await quickSort(low, pi - 1);
+    await quickSort(pi + 1, high);
+  }
+}
+
+async function runQuickSort() {
+  if (running) return;
+
+  running = true;
+  setSortButtons(true);
+  comparisons = 0;
+  document.getElementById("sortLog").innerHTML = "Starting QuickSort...";
+  renderBars();
+
+  await quickSort(0, arr.length - 1);
+
+  renderBars([], -1, arr.map((_, i) => i));
+  log("Sorting completed successfully!");
+  log("Total comparisons: " + comparisons);
+
+  running = false;
+  setSortButtons(false);
+}
+
+function randomArray() {
+  if (running) return;
+  arr = Array.from({length:12}, () => Math.floor(Math.random()*90)+10);
+  originalArray = [...arr];
+  comparisons = 0;
+  document.getElementById("sortLog").textContent = "New random array generated.";
+  renderBars();
+}
+
+function resetArray() {
+  if (running) return;
+  arr = [...originalArray];
+  comparisons = 0;
+  document.getElementById("sortLog").textContent = "Array reset.";
+  renderBars();
+}
+
+// ---------------- GREEDY SCHEDULER ----------------
+
+let tasks = [];
+
+function addTask() {
+  const name = document.getElementById("taskName").value.trim();
+  const start = Number(document.getElementById("taskStart").value);
+  const end = Number(document.getElementById("taskEnd").value);
+
+  if (!name || document.getElementById("taskStart").value === "" ||
+      document.getElementById("taskEnd").value === "" ||
+      !Number.isInteger(start) || !Number.isInteger(end) ||
+      start < 0 || end > 24 || start >= end) {
+    alert("Enter a task name and valid times. Start must be before end.");
+    return;
+  }
+
+  tasks.push({name, start, end});
+  renderTasks();
+
+  document.getElementById("taskName").value = "";
+  document.getElementById("taskStart").value = "";
+  document.getElementById("taskEnd").value = "";
+  document.getElementById("greedyResult").textContent =
+    "Task added. Run the optimizer to calculate your schedule.";
+}
+
+function renderTasks(selected = []) {
+  const list = document.getElementById("taskList");
+
+  if (!tasks.length) {
+    list.innerHTML = "<p class='description'>No tasks added yet.</p>";
+    return;
+  }
+
+  list.innerHTML = tasks.map((t, i) => `
+    <div class="task ${selected.includes(i) ? "selected" : ""}">
+      <div>
+        <strong>${escapeHTML(t.name)}</strong><br>
+        <small>${t.start}:00 – ${t.end}:00</small>
+      </div>
+      <div>
+        ${selected.includes(i) ? "<span class='status'>✓ SELECTED</span>" : ""}
+        <button class="remove" onclick="removeTask(${i})">Remove</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function escapeHTML(value) {
+  return value.replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;",
+    '"':"&quot;", "'":"&#39;"
+  })[char]);
+}
+
+function removeTask(index) {
+  tasks.splice(index, 1);
+  renderTasks();
+  document.getElementById("greedyResult").textContent =
+    "Task removed. Run the optimizer again.";
+}
+
+function runGreedy() {
+  if (!tasks.length) {
+    alert("Please add some tasks first.");
+    return;
+  }
+
+  const sorted = tasks.map((task, index) => ({...task, index}))
+    .sort((a,b) => a.end - b.end || a.start - b.start);
+
+  const selected = [];
+  let lastEndTime = -1;
+
+  for (const task of sorted) {
+    if (task.start >= lastEndTime) {
+      selected.push(task.index);
+      lastEndTime = task.end;
+    }
+  }
+
+  renderTasks(selected);
+
+  const names = selected.map(i => escapeHTML(tasks[i].name));
+
+  document.getElementById("greedyResult").innerHTML =
+    "<strong>Optimization Completed!</strong><br>" +
+    "Total activities considered: " + tasks.length + "<br>" +
+    "Activities selected: " + selected.length + "<br>" +
+    "<strong>Optimized schedule:</strong><br>" +
+    (names.length ? names.join(" → ") : "No compatible tasks found.");
+}
+
+function loadSample() {
+  tasks = [
+    {name:"Mathematics", start:9, end:11},
+    {name:"Programming", start:10, end:12},
+    {name:"Physics", start:11, end:13},
+    {name:"Cybersecurity", start:13, end:15},
+    {name:"Revision", start:12, end:14},
+    {name:"DSA Practice", start:15, end:17}
+  ];
+
+  renderTasks();
+  document.getElementById("greedyResult").textContent =
+    "Sample tasks loaded. Click Run Greedy Optimizer.";
+}
+
+function clearTasks() {
+  tasks = [];
+  renderTasks();
+  document.getElementById("greedyResult").textContent =
+    "All activities cleared. Add new tasks to begin.";
+}
+
+// INITIALIZE
+
+renderBars();
+renderTasks();
+
+</script>
+</body>
+</html>
